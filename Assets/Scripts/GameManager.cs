@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        LoadGame();
+        //LoadGame(); optional w/ button
     }
 
     //private void Start()
@@ -84,6 +84,8 @@ public class GameManager : MonoBehaviour
     {
         //started = true handled at different time
         gameOver = false;
+        currentScoreText.gameObject.SetActive(true);
+        playerName = FindObjectOfType<TMP_InputField>().text;
         AddScore(0);
         SceneManager.LoadScene(1);
     }
@@ -113,10 +115,18 @@ public class GameManager : MonoBehaviour
     }
 
 
+    public void LoadNextNevel()
+    {
+        int buildIndex = SceneManager.GetActiveScene().buildIndex + 1;
+        SceneManager.LoadScene(buildIndex);
+    }
+
+
     public void RestartGame()
     {
         ResumeGame();
         started = false;
+        gameOver = false;
         AddScore(-currentScore);
         gameOverScreen.SetActive(false);
         SceneManager.LoadScene(1);
@@ -135,6 +145,7 @@ public class GameManager : MonoBehaviour
         started = false;
         AddScore(-currentScore);
         gameOverScreen.SetActive(false);
+        currentScoreText.gameObject.SetActive(false);
         SceneManager.LoadScene(0);
     }
 
