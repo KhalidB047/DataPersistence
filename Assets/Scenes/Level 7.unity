@@ -512,11 +512,29 @@ MonoBehaviour:
   highScoreText: {fileID: 0}
   currentScoreText: {fileID: 0}
   currentScore: 0
+  playerName: 
   gameOver: 0
   started: 0
   paused: 0
-  highScore: 0
-  playerName: 
+  scoresList:
+  - name: AAA
+    score: 0
+  - name: AAA
+    score: 0
+  - name: AAA
+    score: 0
+  - name: AAA
+    score: 0
+  - name: AAA
+    score: 0
+  - name: AAA
+    score: 0
+  - name: AAA
+    score: 0
+  - name: AAA
+    score: 0
+  - name: AAA
+    score: 0
 --- !u!4 &366688301
 Transform:
   m_ObjectHideFlags: 0
@@ -1441,5 +1459,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 817754698302058773, guid: a41d25ec7a9b72e4d86f1ad880de570c, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: aae70e69bd204bc43859944331b57ef5, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a41d25ec7a9b72e4d86f1ad880de570c, type: 3}

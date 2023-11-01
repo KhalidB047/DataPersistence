@@ -16,6 +16,6 @@ public class MainMenu : MonoBehaviour
         startButton.onClick.AddListener(GameManager.gameMan.StartGame);
         quitButton.onClick.AddListener(GameManager.gameMan.CloseApplication);
         loadButton.onClick.AddListener(GameManager.gameMan.LoadGame);
-        //highScoresButton.onClick.AddListener(GameManager.gameMan...);
+        highScoresButton.onClick.AddListener(GameManager.gameMan.ViewLeaderboard);
     }
 }

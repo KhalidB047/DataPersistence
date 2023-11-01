@@ -7,6 +7,9 @@ public class Fireworks : MonoBehaviour
     [SerializeField] private float maxX;
     [SerializeField] private float maxY;
     [SerializeField] private float minY;
+    [SerializeField] private float minDelay = 0.1f;
+    [SerializeField] private float maxDelay = 0.6f;
+
 
 
     [SerializeField] private GameObject[] fireWorks;
@@ -35,7 +38,7 @@ public class Fireworks : MonoBehaviour
         while(launching)
         {
             Instantiate(fireWorks[Random.Range(0, fireWorks.Length)], RandomPosition(), Quaternion.identity);
-            yield return new WaitForSeconds(Random.Range(0.10f, 0.6f));
+            yield return new WaitForSeconds(Random.Range(minDelay, maxDelay));
         }
     }
 

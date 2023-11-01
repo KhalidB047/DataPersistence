@@ -13,9 +13,12 @@ public class EndButtons : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if(restartButton != null)
         restartButton.onClick.AddListener(GameManager.gameMan.RestartGame);
+        if(quitToMenuButton != null)
         quitToMenuButton.onClick.AddListener(GameManager.gameMan.QuitToMainMenu);
-        //highScoresButton.onClick.AddListener(GameManager.gameMan...);
+        if(highScoresButton != null)
+        highScoresButton.onClick.AddListener(GameManager.gameMan.ViewLeaderboard);
 
     }
 

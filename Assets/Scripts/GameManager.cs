@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using TMPro;
 #if UNITY_EDITOR
-    using UnityEditor;
+using UnityEditor;
 #endif
 using UnityEngine.SceneManagement;
 using UnityEngine;
@@ -18,26 +18,28 @@ public class GameManager : MonoBehaviour
     //object access
     [SerializeField] private GameObject pauseScreen;
     [SerializeField] private GameObject gameOverScreen;
+    [SerializeField] private TextMeshProUGUI newHighScoreText;
     [SerializeField] private TextMeshProUGUI highScoreText;
     [SerializeField] private TextMeshProUGUI currentScoreText;
 
 
     //working data
     [SerializeField] private int currentScore;
+    public string playerName = "";
     public bool gameOver;
     public bool started;
     public bool paused;
 
 
     //working data, same as save data
-    public int highScore;
-    public string playerName;
+    public HighScore[] scoresList = new HighScore[9];
+
 
 
     //game manager will persist through scenes
     private void Awake()
     {
-        if(gameMan == null)
+        if (gameMan == null)
         {
             gameMan = this;
             DontDestroyOnLoad(gameObject);
@@ -46,12 +48,10 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        //LoadGame(); optional w/ button
+        LoadGame(); //optional w/ button
     }
 
-    //private void Start()
-    //{
-    //}
+
 
 
 
@@ -73,11 +73,31 @@ public class GameManager : MonoBehaviour
 
     public void UpdateHighScore()
     {
-        if(currentScore >= highScore)
+        for (int i = 0; i < scoresList.Length; i++)
         {
-            highScore = currentScore;
-            highScoreText.text = $"High Score\n{playerName}\n{highScore}";
+            if (currentScore > scoresList[i].score)
+            {
+                for (int j = scoresList.Length - 1; j > i; j--)
+                {
+                    scoresList[j].name = scoresList[j - 1].name;
+                    scoresList[j].score = scoresList[j - 1].score;
+                }
+                scoresList[i].name = playerName;
+                scoresList[i].score = currentScore;
+                newHighScoreText.gameObject.SetActive(true);
+                newHighScoreText.text = $"NEW #{i + 1} HIGH SCORE";
+                highScoreText.text = $"High Score\n{scoresList[0].name}\n{scoresList[0].score}";
+                return;
+            }
         }
+
+
+
+        //if(currentScore >= highScore)
+        //{
+        //    highScore = currentScore;
+        //    highScoreText.text = $"High Score\n{playerName}\n{highScore}";
+        //}
     }
 
     public void StartGame()
@@ -104,7 +124,7 @@ public class GameManager : MonoBehaviour
             paused = true;
             pauseScreen.SetActive(true);
         }
-        
+
     }
 
     public void ResumeGame()
@@ -121,6 +141,12 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(buildIndex);
     }
 
+    public void ViewLeaderboard()
+    {
+        highScoreText.gameObject.SetActive(false);
+        SceneManager.LoadScene("Leaderboard");
+    }
+
 
     public void RestartGame()
     {
@@ -129,6 +155,7 @@ public class GameManager : MonoBehaviour
         gameOver = false;
         AddScore(-currentScore);
         gameOverScreen.SetActive(false);
+        newHighScoreText.gameObject.SetActive(false);
         SceneManager.LoadScene(1);
     }
 
@@ -145,7 +172,9 @@ public class GameManager : MonoBehaviour
         started = false;
         AddScore(-currentScore);
         gameOverScreen.SetActive(false);
+        newHighScoreText.gameObject.SetActive(false);
         currentScoreText.gameObject.SetActive(false);
+        highScoreText.gameObject.SetActive(true);
         SceneManager.LoadScene(0);
     }
 
@@ -161,15 +190,21 @@ public class GameManager : MonoBehaviour
     }
 
 
-    
-    
+
+
 
     //the class containing the data to be saved between sessions
     [System.Serializable]
     public class SaveData
     {
-        public string playerName;
-        public int highScore;
+        public HighScore[] savedScores = new HighScore[9];
+    }
+
+    [System.Serializable]
+    public class HighScore
+    {
+        public string name = "AAA";
+        public int score = 0;
     }
 
 
@@ -178,9 +213,10 @@ public class GameManager : MonoBehaviour
         //create a new savedata class instance and
         //give it the necessary save data
         SaveData data = new SaveData();
-        data.playerName = playerName;
-        data.highScore = highScore;
-
+        for (int i = 0; i < data.savedScores.Length; i++)
+        {
+            data.savedScores[i] = scoresList[i]; 
+        }
         //convert the data to a json string
         //then write that string to a file
         string json = JsonUtility.ToJson(data);
@@ -195,20 +231,18 @@ public class GameManager : MonoBehaviour
         //then convert that json string to savedata
         //then set the local data to that data
         string path = Application.persistentDataPath + "/savefile.json";
-        if(File.Exists(path))
+        if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
             SaveData data = JsonUtility.FromJson<SaveData>(json);
 
-            playerName = data.playerName;
-            highScore = data.highScore;
-            highScoreText.text = "High Score\n" + playerName + "\n" + highScore;
 
-        }
-        else
-        {
-            playerName = "";
-            highScore = 0;
+            for (int i = 0; i < data.savedScores.Length; i++)
+            {
+                scoresList[i] = data.savedScores[i];
+            }
+            
+            highScoreText.text = "High Score\n" + scoresList[0].name + "\n" + scoresList[0].score;
         }
     }
 }
