@@ -1,12 +1,15 @@
 using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using Random = UnityEngine.Random;
 using UnityEngine.Events;
 
 public class Brick : MonoBehaviour
 {
     public UnityEvent<int> onDestroyed;
+
+    [SerializeField] private GameObject[] breakParticles;
     
     public int PointValue;
 
@@ -48,8 +51,10 @@ public class Brick : MonoBehaviour
     private void OnCollisionEnter(Collision other)
     {
         onDestroyed.Invoke(PointValue);
-        
         //slight delay to be sure the ball have time to bounce
-        Destroy(gameObject, 0.15f);
+        Instantiate(breakParticles[Random.Range(0, breakParticles.Length)], transform.position, Quaternion.identity);
+        Destroy(gameObject, 0.05f);
     }
+
+    
 }
