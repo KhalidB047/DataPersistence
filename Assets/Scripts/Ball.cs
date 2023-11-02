@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,10 +39,26 @@ public class Ball : MonoBehaviour
         velocity += velocity.normalized * ballAccelerationRate;
 
         //check if we are not going totally vertically as this would lead to being stuck, we add a little vertical force
-        if (Vector3.Dot(velocity.normalized, Vector3.up) < 0.1f)
+
+
+        if (Vector3.Dot(velocity.normalized, Vector3.up) < 0.1f && Vector3.Dot(velocity.normalized, Vector3.up) > -0.1f)
         {
-            velocity += velocity.y > 0 ? Vector3.right * 0.3f : Vector3.left * 0.3f;
+            Debug.Log(Vector3.Dot(velocity.normalized, Vector3.up));
+
+            velocity += new Vector3(Random.Range(-1f, 1f), velocity.y, 0f).normalized * 0.5f;
         }
+
+        //if (Vector3.Dot(velocity.normalized, Vector3.up) < 0.1f && Vector3.Dot(velocity.normalized, Vector3.up) > -0.1f)
+        //{
+        //    Debug.Log(Vector3.Dot(velocity.normalized, Vector3.up));
+        //    velocity += velocity.y > 0f ? Vector3.right * 0.5f : Vector3.left * 0.5f;
+        //}
+
+        //if (Vector3.Dot(velocity.normalized, Vector3.right) < 0.1f && Vector3.Dot(velocity.normalized, Vector3.right) > -0.1f)
+        //{
+        //    Debug.Log(Vector3.Dot(velocity.normalized, Vector3.up));
+        //    velocity += velocity.x > 0f ? Vector3.up * 0.5f : Vector3.down * 0.5f;
+        //}
 
         //max velocity
         if (velocity.magnitude > maxBallVelocity)
